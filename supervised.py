@@ -48,6 +48,7 @@ parser.add_argument("--dico_threshold", type=float, default=0, help="Threshold c
 parser.add_argument("--dico_max_rank", type=int, default=10000, help="Maximum dictionary words rank (0 to disable)")
 parser.add_argument("--dico_min_size", type=int, default=0, help="Minimum generated dictionary size (0 to disable)")
 parser.add_argument("--dico_max_size", type=int, default=0, help="Maximum generated dictionary size (0 to disable)")
+parser.add_argument("--dico_rank_similarity", type=int, default=0, help="Constrain dictionary words to have similar rank (0 to disable)")
 # reload pre-trained embeddings
 parser.add_argument("--src_emb", type=str, default='', help="Reload source embeddings")
 parser.add_argument("--tgt_emb", type=str, default='', help="Reload target embeddings")
