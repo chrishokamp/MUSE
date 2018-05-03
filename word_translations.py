@@ -106,7 +106,8 @@ def main(args):
     top_k_match_ids = get_word_translations(src_emb, tgt_emb, args.knn,
                                             src_cutoff=args.src_cutoff,
                                             src_rank_map=src_rank_map,
-                                            trg_rank_map=trg_rank_map)
+                                            trg_rank_map=trg_rank_map,
+                                            softmax_temp=args.softmax_temp)
 
     output_file = '%s-%s.txt' % (args.src_lang, args.tgt_lang)
     print('Writing to %s...' % output_file)
