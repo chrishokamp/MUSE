@@ -33,7 +33,7 @@ def get_word_rank_map(fasttext_emb_file):
 
 def get_word_translations(emb1, emb2, knn,
                           src_cutoff=None,
-                          softmax_temp=30.,
+                          softmax_temp=1./30.,
                           src_rank_map=None,
                           trg_rank_map=None):
     """
@@ -52,7 +52,7 @@ def get_word_translations(emb1, emb2, knn,
     average_dist2 = torch.from_numpy(average_dist2).type_as(emb2)
 
     top_k_match_ids = []
-    step_size = 100
+    step_size = 1000
     if src_cutoff is None:
         src_cutoff = emb1.shape[0]
 
@@ -91,8 +91,8 @@ def main(args):
     src_rank_map = None
     trg_rank_map = None
     if args.word_rank_heuristic:
-        rank_window = 5000
-        rank_heuristic_threshold = 50000
+        rank_window = args.rank_window
+        rank_heuristic_threshold = args.rank_heuristic_threshold
         src_rank_map = get_word_rank_map(args.src_emb)
         trg_rank_map = get_word_rank_map(args.tgt_emb)
 
@@ -162,9 +162,12 @@ if __name__ == '__main__':
     parser.add_argument("--word_rank_heuristic", dest='word_rank_heuristic', action='store_true',
                         help="whether to filter the pairs using the word rank heuristic")
     parser.set_defaults(word_rank_heuristic=False)
+    parser.add_argument("--rank_window", type=int, required=False, default=7500,
+                        help="if word_rank_heuristic is enabled, the size of the rank window that matches can be selected from")
+    parser.add_argument("--rank_heuristic_threshold", type=int, default=100000,
+                        help="if word_rank_heuristic is enabled, the heuristic will only be applied to words below this rank")
     parser.add_argument('--softmax_temp', type=float, default=1./30.,
                         help='Softmax temperature for score normalization')
-
     parser.add_argument('--knn', type=int, default=10,
                         help='K-NNs that should be retrieved for each source word'
                              '(Conneau et al. use 10 for evaluation)')
